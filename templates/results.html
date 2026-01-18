@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Career Risk Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">AI Career</div>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/form">Analyze Again</a>
+    </nav>
+</header>
+
+<section class="page">
+
+    <div class="card wide">
+        <h2>Career Switch Risk Report</h2>
+
+        <div class="stats">
+            <div>
+                <h4>Risk Level</h4>
+                <span class="badge {{ risk|lower }}">{{ risk }}</span>
+            </div>
+            <div>
+                <h4>Risk Probability</h4>
+                <p>{{ probability }}%</p>
+            </div>
+            <div>
+                <h4>Readiness Score</h4>
+                <p>{{ readiness }}/100</p>
+            </div>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" style="width: {{ readiness }}%"></div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <h3>Skill Gap Analysis</h3>
+            <ul>
+                {% for s in missing_skills %}
+                <li>{{ s }}</li>
+                {% endfor %}
+            </ul>
+            <p><strong>Estimated Time:</strong> {{ months }} months</p>
+        </div>
+
+        <div class="card">
+            <h3>Risk Factors</h3>
+            <ul>
+                {% for r in risk_factors %}
+                <li>{{ r }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card wide">
+        <h3>AI Recommendations</h3>
+        <ul>
+            {% for rec in recommendations %}
+            <li>{{ rec }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</section>
+
+</body>
+</html>

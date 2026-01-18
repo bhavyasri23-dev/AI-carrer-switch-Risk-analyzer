@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Career Risk Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">AI Career</div>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/form">Risk Analysis</a>
+    </nav>
+</header>
+
+<section class="page">
+    <div class="card wide">
+        <h2>Career Risk Analysis</h2>
+        <p class="subtitle">Enter your details to evaluate career switch risk</p>
+
+        <form action="{{ url_for('predict') }}" method="POST" class="form-grid">
+
+
+            <div>
+                <label>Skill Level (1–5)</label>
+                <input type="number" name="skill" min="1" max="5" required>
+            </div>
+
+            <div>
+                <label>Weekly Learning Hours</label>
+                <input type="number" name="hours" min="1" max="50" required>
+            </div>
+
+            <div>
+                <label>Years of Experience</label>
+                <input type="number" name="experience" min="0" max="40" required>
+            </div>
+
+            <div>
+                <label>Target Career Difficulty (1–5)</label>
+                <input type="number" name="difficulty" min="1" max="5" required>
+            </div>
+
+            <div class="full">
+                <button type="submit" class="btn-primary">Analyze Risk</button>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+</body>
+</html>
