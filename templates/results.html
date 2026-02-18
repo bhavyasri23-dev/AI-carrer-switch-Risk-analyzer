@@ -1,76 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Career Risk Results</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <title>Career Risk Results</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800">
 
-<header class="navbar">
-    <div class="logo">AI Career</div>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/form">Analyze Again</a>
+<!-- Navbar -->
+<header class="bg-white shadow-md">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <div class="text-2xl font-bold text-indigo-600">AI Career</div>
+    <nav class="flex gap-6 text-gray-700">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <a href="/form" class="hover:text-indigo-600">Analyze Again</a>
+      {% if username %}
+      <span class="font-semibold text-gray-700">Hello, {{ username }}</span>
+      <a href="/logout" class="hover:text-indigo-600">Logout</a>
+      {% else %}
+      <a href="/login" class="hover:text-indigo-600">Login</a>
+      <a href="/register" class="hover:text-indigo-600">Register</a>
+      {% endif %}
     </nav>
+  </div>
 </header>
 
-<section class="page">
+<section class="max-w-5xl mx-auto px-6 py-12 space-y-8">
 
-    <div class="card wide">
-        <h2>Career Switch Risk Report</h2>
+  <!-- Notifications -->
+  {% if notifications %}
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded shadow">
+    <p class="font-semibold">📢 AI Insights:</p>
+    <ul class="list-disc ml-5 text-sm">
+      {% for note in notifications %}
+      <li>{{ note }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 
-        <div class="stats">
-            <div>
-                <h4>Risk Level</h4>
-                <span class="badge {{ risk|lower }}">{{ risk }}</span>
-            </div>
-            <div>
-                <h4>Risk Probability</h4>
-                <p>{{ probability }}%</p>
-            </div>
-            <div>
-                <h4>Readiness Score</h4>
-                <p>{{ readiness }}/100</p>
-            </div>
-        </div>
+  <!-- Career Results -->
+  {% for res in results %}
+  <div class="bg-white p-6 rounded-xl shadow-lg">
 
-        <div class="progress">
-            <div class="progress-bar" style="width: {{ readiness }}%"></div>
-        </div>
+    <h2 class="text-2xl font-bold mb-4">{{ res.career }}</h2>
+
+    <!-- Risk & Readiness -->
+    <div class="grid md:grid-cols-3 gap-6 text-center">
+      <div>
+        <p class="text-sm text-gray-500">Risk Level</p>
+        <span class="inline-block mt-2 px-4 py-1 rounded-full text-sm font-semibold
+          {% if res.risk == 'Low' %} bg-green-100 text-green-600
+          {% elif res.risk == 'Medium' %} bg-yellow-100 text-yellow-600
+          {% else %} bg-red-100 text-red-600 {% endif %}">
+          {{ res.risk }}
+        </span>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Risk Probability</p>
+        <p class="mt-2 text-2xl font-bold">{{ res.probability }}%</p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Readiness Score</p>
+        <p class="mt-2 text-2xl font-bold">{{ res.readiness }}/100</p>
+      </div>
     </div>
 
-    <div class="grid-2">
-        <div class="card">
-            <h3>Skill Gap Analysis</h3>
-            <ul>
-                {% for s in missing_skills %}
-                <li>{{ s }}</li>
-                {% endfor %}
-            </ul>
-            <p><strong>Estimated Time:</strong> {{ months }} months</p>
-        </div>
-
-        <div class="card">
-            <h3>Risk Factors</h3>
-            <ul>
-                {% for r in risk_factors %}
-                <li>{{ r }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+    <!-- Progress Bar -->
+    <div class="mt-6">
+      <p class="text-sm text-gray-500 mb-2">Career Readiness</p>
+      <div class="w-full bg-gray-200 rounded-full h-3">
+        <div class="bg-indigo-600 h-3 rounded-full" style="width: {{ res.readiness }}%"></div>
+      </div>
     </div>
 
-    <div class="card wide">
-        <h3>AI Recommendations</h3>
-        <ul>
-            {% for rec in recommendations %}
-            <li>{{ rec }}</li>
-            {% endfor %}
+    <!-- Skills & Recommendations -->
+    <div class="grid md:grid-cols-2 gap-6 mt-6">
+
+      <!-- Missing Skills -->
+      <div class="bg-gray-100 p-4 rounded shadow">
+        <h3 class="font-semibold mb-2">Missing Skills 📌</h3>
+        {% if res.missing_skills %}
+        <ul class="list-disc ml-5 text-sm">
+          {% for skill in res.missing_skills %}
+          <li>{{ skill }}</li>
+          {% endfor %}
         </ul>
+        {% else %}
+        <p class="text-gray-500">You have all the required skills!</p>
+        {% endif %}
+      </div>
+
+      <!-- AI Recommendations -->
+      <div class="bg-gray-100 p-4 rounded shadow">
+        <h3 class="font-semibold mb-2">AI Recommendations 💡</h3>
+        {% if res.recommendations %}
+        <ul class="list-disc ml-5 text-sm">
+          {% for rec in res.recommendations %}
+          <li>{{ rec }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-gray-500">No recommendations at this time.</p>
+        {% endif %}
+      </div>
+
     </div>
 
+  </div>
+  {% endfor %}
 </section>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-6 text-center mt-12">
+  <p>© 2026 AI Career Pathways</p>
+</footer>
 
 </body>
 </html>
